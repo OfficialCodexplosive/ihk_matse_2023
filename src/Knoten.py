@@ -8,7 +8,12 @@ class Knoten:
         return self.name
 
     def __eq__(self, other : Knoten) -> bool:
-        return self.name == other.name
+        if isinstance(other, Knoten):
+            return self.name == other.name
+        return False
+    
+    def __hash__(self) -> int:
+        return hash(self.name)
 
     def setzeVorgaenger(self, k : Knoten) -> None:
         self.vorgaenger = k

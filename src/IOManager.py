@@ -12,13 +12,19 @@ class IOManager:
             for line in file:
                 if line.startswith('#'):
                     continue
-                verbindung_str = line.strip('; ').split(';')
+                verbindung_str = line.strip(';').strip().split(';')
                 verbindungsknoten = self.verbindungZuKnoten(verbindung_str)
                 zugverbindungen.append(verbindungsknoten)
         return zugverbindungen
     
     def verbindungZuKnoten(self, verbindung : list[str]) -> list[Knoten]:
         verbindung = list( map(Knoten, verbindung) )
+        for idx, _ in enumerate(verbindung):
+            vorgaenger = None if idx == 0 else verbindung[idx-1]
+            nachfolger = None if idx == len(verbindung)-1 else verbindung[idx+1]
+
+            verbindung[idx].setzeVorgaenger(vorgaenger)
+            verbindung[idx].setzeNachfolger(nachfolger)
         return verbindung
 
     def schreibeAusgabe(self, menge : list[Knoten], ausgabeOrdner : str = None) -> None:
