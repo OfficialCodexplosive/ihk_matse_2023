@@ -13,10 +13,8 @@ class MinimalRechner:
 
     def reduziereZugverbindungen(self) -> list[list[Knoten]]:
         red_zugverbindungen = deepcopy(self.zugverbindungen)
-        #for methode in [ ReduziereDuplikate, ReduziereBahnhoefe, ReduziereZugverbindungen ]: 
-        #    red_zugverbindungen = methode.reduziere( red_zugverbindungen )
-        
-        red_zugverbindungen = ReduziereZugverbindungen.reduziere( red_zugverbindungen )
+        for methode in [ ReduziereDuplikate, ReduziereBahnhoefe, ReduziereZugverbindungen ]: 
+            red_zugverbindungen = methode.reduziere( red_zugverbindungen )
 
         return red_zugverbindungen
 
