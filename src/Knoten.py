@@ -6,6 +6,9 @@ class Knoten:
 
     def __str__(self) -> str:
         return self.name
+    
+    def __repr__(self) -> str:
+        return self.name
 
     def __eq__(self, other : Knoten) -> bool:
         if isinstance(other, Knoten):
