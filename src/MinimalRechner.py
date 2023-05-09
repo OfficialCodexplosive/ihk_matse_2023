@@ -57,12 +57,12 @@ class MinimalRechner:
             red_zugverbindungen = methode.reduziere( red_zugverbindungen )
 
         return red_zugverbindungen
-
-    def berechneMinimalloesung(self, zugverbindungen : list[list[Knoten]] = None, ausgabeOrdner : str = None) -> list[Knoten]:
+    
+    def berechneKandidaten(self) -> list[Knoten]:
         """
-        Funktion zur Berechnung der minimalen Anzahl an sowie Positionen der Servicestationen durch Bestimmen der Haltestellen mit maximaler Überdeckung.
+        Funktion zur Berechnung der moeglichen Kandidaten für die Minimalloesung durch Bestimmen der Haltestellen mit maximaler Überdeckung.
 
-        Der Algorithmus bestimmt die minimale Lösung, indem...
+        Der Algorithmus bestimmt die Kandidaten, indem...
         
         ...zunächst die Zugverbindungen durch Anwendung der Reduktionstechniken optimiert werden.
 
@@ -74,22 +74,12 @@ class MinimalRechner:
 
         ...die Haltestellen - die als Servicestation bestimmt wurden - entfernt werden.
 
-        Bei Übergabe einer Liste von Zugverbindungen wird diese als Grundlage für die Berechnung der minimalen Lösung verwendet.
-        Durch Angabe eines Ausgabeordners wird die Minimallösung an einen benutzerdefinierten Speicherort geschrieben.
-
-        :param zugverbindungen: Liste der optimierten Zugverbindungen
-        :type zugverbindungen: list[list[Knoten]]
-
-        :param ausgabeOrdner: Pfad zum Ausgabeordner
-        :type ausgabeOrdner: str
-
-        :return: Liste der Servicestationen
+        :return: iterativ erzeugte Liste der Kandidaten
         :rtype: list[Knoten]
         """
-        if zugverbindungen:
-            self.zugverbindungen = zugverbindungen
-
         red_zugverbindungen = self.reduziereZugverbindungen()
+        self.zugverbindungen = red_zugverbindungen
+
         knoten_erscheinung = {}
         for v in red_zugverbindungen:
             for k in v:
@@ -98,10 +88,10 @@ class MinimalRechner:
                 else:
                     knoten_erscheinung[k] += 1
 
-        servicestationen = []
+        kandidaten = []
         while len(red_zugverbindungen) > 1:
             hoechstes_aufkommen = max( knoten_erscheinung, key=knoten_erscheinung.get )
-            servicestationen.append(hoechstes_aufkommen)
+            kandidaten.append(hoechstes_aufkommen)
 
             zugverbindungen_neu = []
             for v in red_zugverbindungen:
@@ -112,12 +102,81 @@ class MinimalRechner:
 
         if len(red_zugverbindungen) == 1:
             hoechstes_aufkommen = zugverbindungen_neu[0][0]
-            servicestationen.append(hoechstes_aufkommen)
+            kandidaten.append(hoechstes_aufkommen)
 
+        return kandidaten
+
+    def berechneMinimalloesung(self, zugverbindungen : list[list[Knoten]] = None, ausgabeOrdner : str = None) -> tuple[int, list[Knoten]]:
+        """
+        Funktion zur Berechnung der minimalen Anzahl an sowie Positionen der Servicestationen durch Bestimmen der Haltestellen mit maximaler Überdeckung.
+
+        Der Algorithmus bestimmt die minimale Lösung, indem...
+        
+        ...die möglichen Kandidaten zunächst durch Anwendung eines Greedy-Algorithmus bestimmt werden.
+
+        ...die mit einem Kandidaten assoziierten Zugverbindungen - nach Haltestellennahmen kategorisiert - gespeichert werden.
+
+        ...die minimale Anzahl an Zugverbindungen bestimmt wird, die das gesamte Eisenbahnnetz abdeckt.
+
+        ...die endgültige Lösung anhand ihrer Mächtigkeit auf Plausabilität getestet wird.
+
+        Bei Übergabe einer Liste von Zugverbindungen wird diese als Grundlage für die Berechnung der minimalen Lösung verwendet.
+        Durch Angabe eines Ausgabeordners wird die Minimallösung an einen benutzerdefinierten Speicherort geschrieben.
+
+        :param zugverbindungen: Liste der Zugverbindungen
+        :type zugverbindungen: list[list[Knoten]]
+
+        :param ausgabeOrdner: Pfad zum Ausgabeordner
+        :type ausgabeOrdner: str
+
+        :return: Anzahl und Positionen der Servicestationen
+        :rtype: tuple[int, list[Knoten]]
+        """
+        if zugverbindungen:
+            self.zugverbindungen = zugverbindungen
+
+        # Kandidaten bestimmen
+        kandidaten = self.berechneKandidaten()
+        alle_verbindungen = set( map(frozenset,self.zugverbindungen) )
+
+        abdeckung_nach_kandidat = {}
+
+        for k in kandidaten:
+            # Berechne Menge der Verbindungen die durch k abgedeckt werden
+            k_abgedeckte_verbindungen = set()
+            for verbindung in self.zugverbindungen:
+                if k in verbindung:
+                    k_abgedeckte_verbindungen.add( frozenset(verbindung) )
+
+            if not k in abdeckung_nach_kandidat:
+                abdeckung_nach_kandidat[k] = k_abgedeckte_verbindungen
+
+        servicestationen = self.minimaleAbdeckung(alle_verbindungen, abdeckung_nach_kandidat)
+        
         if self.validiereErgebnis(servicestationen):
             self.minimalloesung = servicestationen
             self.manager.schreibeAusgabe(self.minimalloesung, ausgabeOrdner)
-            return servicestationen
+            return len(servicestationen), servicestationen
+
+    def erzeugeKombinationen(self, kandidaten):
+        if len(kandidaten) == 0:
+            return [[]]
+        kombos = []
+        for k in self.erzeugeKombinationen(kandidaten[1:]):
+            kombos += [k, k + [kandidaten[0]]]
+        return kombos
+    
+    def minimaleAbdeckung(self, alleVerbindungen, zuKombinierendeVerbindungen):
+        zuTestendeKombos = self.erzeugeKombinationen(list(zuKombinierendeVerbindungen.keys()))
+
+        for k in zuTestendeKombos:
+            if k:
+                kombinierteVerbindung = set()
+                for v in k:
+                    kombinierteVerbindung.update(zuKombinierendeVerbindungen[v])
+                if(kombinierteVerbindung == alleVerbindungen):
+                    return k
+        return None
 
     def validiereErgebnis(self, ergebnis : list[Knoten]) -> bool:
         """
