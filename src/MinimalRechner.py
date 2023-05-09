@@ -4,7 +4,7 @@ from sys import exit
 
 from .Knoten import Knoten
 from .IOManager import IOManager
-from .Reduktionstechnik import ReduziereDuplikate, ReduziereBahnhoefe, ReduziereZugverbindungen
+from .Reduktionstechnik import ReduziereDuplikate, ReduziereBahnhoefe, ReduziereZugverbindungen, Reduktionstechnik
 
 root_path = Path(__file__).parent.resolve()
 
@@ -51,21 +51,11 @@ class MinimalRechner:
         except Exception as e:
             raise e
         self.minimalloesung = []
-
-    def reduziereZugverbindungen(self) -> list[list[Knoten]]:
-        """
-        Vorverarbeitungsschritt zur Optimierung der Zugverbindungen nach den gegebenen Reduzierungstechniken.
-
-        :return: Liste der optimierten Zugverbindungen
-        :rtype: list[list[Knoten]]
-        """
-        red_zugverbindungen = deepcopy(self.zugverbindungen)    # sicherstellen, dass Originaldaten nicht veraendert werden
-        for methode in [ ReduziereDuplikate, ReduziereBahnhoefe, ReduziereZugverbindungen ]: 
-            red_zugverbindungen = methode.reduziere( red_zugverbindungen )
-
-        return red_zugverbindungen
     
-    def berechneMinimalloesung(self, zugverbindungen : list[list[Knoten]] = None, ausgabeOrdner : str = None) -> tuple[int, list[Knoten]]:
+    def berechneMinimalloesung(self, 
+                               zugverbindungen : list[list[Knoten]] = None, 
+                               ausgabeOrdner : str = None,
+                               reduktionstechniken : list[Reduktionstechnik] = [ReduziereDuplikate, ReduziereBahnhoefe, ReduziereZugverbindungen]) -> tuple[int, list[Knoten]]:
         """
         Funktion zur Berechnung der minimalen Anzahl an sowie Positionen der Servicestationen durch Bestimmen der Haltestellen mit maximaler Überdeckung.
 
@@ -96,7 +86,7 @@ class MinimalRechner:
         if zugverbindungen:
             self.zugverbindungen = zugverbindungen
 
-        kandidaten = self.berechneKandidaten()
+        kandidaten = self.berechneKandidaten(reduktionstechniken)
         alle_verbindungen = set( map(frozenset,self.zugverbindungen) )      # erzeuge Menge aller Verbindungen zur spaeteren Anwendung der Mengenoperationen
 
         abdeckung_nach_kandidat = {
@@ -112,7 +102,8 @@ class MinimalRechner:
             self.manager.schreibeAusgabe(self.minimalloesung, ausgabeOrdner)
             return len(servicestationen), servicestationen
     
-    def berechneKandidaten(self) -> list[Knoten]:
+    def berechneKandidaten(self, 
+                           reduktionstechniken : list[Reduktionstechnik] = []) -> list[Knoten]:
         """
         Funktion zur Berechnung der moeglichen Kandidaten für die Minimalloesung durch Bestimmen der Haltestellen mit maximaler Überdeckung.
 
@@ -131,7 +122,7 @@ class MinimalRechner:
         :return: iterativ erzeugte Liste der Kandidaten
         :rtype: list[Knoten]
         """
-        red_zugverbindungen = self.reduziereZugverbindungen()
+        red_zugverbindungen = self.reduziereZugverbindungen(reduktionstechniken)
         self.zugverbindungen = red_zugverbindungen
 
         knoten_erscheinung = {}
@@ -160,6 +151,20 @@ class MinimalRechner:
             kandidaten.append(hoechstes_aufkommen)
 
         return kandidaten
+    
+    def reduziereZugverbindungen(self, 
+                                 reduktionstechniken : list[Reduktionstechnik]) -> list[list[Knoten]]:
+        """
+        Vorverarbeitungsschritt zur Optimierung der Zugverbindungen nach den gegebenen Reduzierungstechniken.
+
+        :return: Liste der optimierten Zugverbindungen
+        :rtype: list[list[Knoten]]
+        """
+        red_zugverbindungen = deepcopy(self.zugverbindungen)    # sicherstellen, dass Originaldaten nicht veraendert werden
+        for methode in reduktionstechniken: 
+            red_zugverbindungen = methode.reduziere( red_zugverbindungen )
+
+        return red_zugverbindungen
     
     def minimaleAbdeckung(self, alleVerbindungen : set[frozenset[Knoten]], zuKombinierendeVerbindungen : dict[Knoten, set[frozenset[Knoten]]]) -> list[Knoten]:
         """
@@ -218,6 +223,8 @@ class MinimalRechner:
         :return: True, wenn Ergebnis valide ist, sonst False
         :rtype: bool
         """
+        if ergebnis == None:
+            return True
         loesung_maechtigkeit = len(ergebnis)
         max_maechtigkeit = len(self.zugverbindungen)
         min_maechtigkeit = 1

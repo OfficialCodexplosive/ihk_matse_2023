@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 
 from .Knoten import Knoten
 
@@ -33,7 +34,7 @@ class IOManager:
         """
         Funktion zum Einlesen und Umwandeln der Eingabedaten in geeignete Datenstrukturen.
 
-        Liest die Eingabedatei und wandelt die einzelnen Textzeilen in eine Liste von Listen von Knoten-Objekte um.
+        Liest die Eingabedatei und wandelt die einzelnen Textzeilen in eine Liste von Listen von Knoten-Objekte um, falls diese nur Gross-, Kleinbuchstaben und Semikolons enthalten.
         Der Name der Eingabedatei wird zur späteren Benennung der Ausgabedatei als Klassenvariable gespeichert.
 
         **Erforderliche Parameter:**
@@ -46,8 +47,9 @@ class IOManager:
         """
         self.fname = Path(pfad).stem
         zugverbindungen = []
+        erlaubte_zeichen = r'^[a-zA-ZäöüÄÖÜß;]*$'
         try:
-            with open(pfad, 'r') as file:
+            with open(pfad, 'r', encoding="utf-8") as file:
                 file.seek(0)
                 lines = file.readlines()
                 if not lines:
@@ -56,8 +58,12 @@ class IOManager:
                     if line.startswith('#'): 
                         continue
                     verbindung_str = line.strip(';').strip().split(';')         # Zeilenumbrueche am Ende der Zeile werden entfernt
+                    
                     if any([elem.isnumeric() for elem in verbindung_str]):
                         raise ValueError(f"Die Eingabedatei {self.fname}.in enthaelt Zahlen.")
+                    if not all([re.match(erlaubte_zeichen, elem) for elem in verbindung_str]):
+                        raise ValueError(f"Die Eingabedatei {self.fname}.in enthaelt unerlaubte Zeichen.")
+                    
                     verbindungsknoten = self.verbindungZuKnoten(verbindung_str)
                     zugverbindungen.append(verbindungsknoten)
             return zugverbindungen
@@ -112,7 +118,7 @@ class IOManager:
         pfad = pfad.joinpath(f'files/out/{self.fname}.out' 
                              if ausgabeOrdner is None 
                              else f'{ausgabeOrdner}/{self.fname}.out')
-        with open(pfad, 'w', newline="") as file:
+        with open(pfad, 'w', newline="", encoding="utf-8") as file:
             file.write(ausgabeText)
 
     def knotenlisteZuText(self, menge : list[Knoten]) -> str:

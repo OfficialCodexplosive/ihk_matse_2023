@@ -33,7 +33,7 @@ def fuehre_tests_aus():
     try:
         import pytest
         print("Fuehre Tests aus...")
-        pytest.main(["-x", "tests/"])
+        pytest.main(["tests/"])
     except ImportError:
         print("pytest nicht gefunden. Bitte installiere pytest mit pip install pytest.\nDas Programm kann auch ohne pytest ausgefuehrt werden. Lassen Sie dafuer den Parameter -t weg und spezifizieren Sie eine Eingabedatei mit dem Parameter -i.")
 
