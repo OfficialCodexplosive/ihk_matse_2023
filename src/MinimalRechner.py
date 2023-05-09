@@ -2,9 +2,9 @@ from pathlib import Path
 from copy import deepcopy
 from sys import exit
 
-from Knoten import Knoten
-from IOManager import IOManager
-from Reduktionstechnik import ReduziereDuplikate, ReduziereBahnhoefe, ReduziereZugverbindungen
+from .Knoten import Knoten
+from .IOManager import IOManager
+from .Reduktionstechnik import ReduziereDuplikate, ReduziereBahnhoefe, ReduziereZugverbindungen
 
 root_path = Path(__file__).parent.resolve()
 

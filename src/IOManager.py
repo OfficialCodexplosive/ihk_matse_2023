@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from Knoten import Knoten
+from .Knoten import Knoten
 
 class IOManager:
     """
@@ -56,6 +56,8 @@ class IOManager:
                     if line.startswith('#'): 
                         continue
                     verbindung_str = line.strip(';').strip().split(';')         # Zeilenumbrueche am Ende der Zeile werden entfernt
+                    if any([elem.isnumeric() for elem in verbindung_str]):
+                        raise ValueError(f"Die Eingabedatei {self.fname}.in enthaelt Zahlen.")
                     verbindungsknoten = self.verbindungZuKnoten(verbindung_str)
                     zugverbindungen.append(verbindungsknoten)
             return zugverbindungen
