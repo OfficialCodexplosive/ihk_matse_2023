@@ -1,5 +1,6 @@
 from __future__ import annotations
-from .Knoten import Knoten
+
+from Knoten import Knoten
 
 class Kante:
     """

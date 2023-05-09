@@ -1,9 +1,12 @@
+from pathlib import Path
 from copy import deepcopy
+from sys import exit
 
-from .Knoten import Knoten
-from .IOManager import IOManager
-from .Reduktionstechnik import ReduziereDuplikate, ReduziereBahnhoefe, ReduziereZugverbindungen
+from Knoten import Knoten
+from IOManager import IOManager
+from Reduktionstechnik import ReduziereDuplikate, ReduziereBahnhoefe, ReduziereZugverbindungen
 
+root_path = Path(__file__).parent.resolve()
 
 class MinimalRechner:
     """
@@ -42,7 +45,11 @@ class MinimalRechner:
         :rtype: None
         """
         self.manager = IOManager()
-        self.zugverbindungen = self.manager.leseDatei(pfad)
+        pfad = root_path.joinpath(pfad)
+        try:
+            self.zugverbindungen = self.manager.leseDatei(pfad)
+        except Exception as e:
+            raise e
         self.minimalloesung = []
 
     def reduziereZugverbindungen(self) -> list[list[Knoten]]:
@@ -52,7 +59,7 @@ class MinimalRechner:
         :return: Liste der optimierten Zugverbindungen
         :rtype: list[list[Knoten]]
         """
-        red_zugverbindungen = deepcopy(self.zugverbindungen)
+        red_zugverbindungen = deepcopy(self.zugverbindungen)    # sicherstellen, dass Originaldaten nicht veraendert werden
         for methode in [ ReduziereDuplikate, ReduziereBahnhoefe, ReduziereZugverbindungen ]: 
             red_zugverbindungen = methode.reduziere( red_zugverbindungen )
 
@@ -89,21 +96,14 @@ class MinimalRechner:
         if zugverbindungen:
             self.zugverbindungen = zugverbindungen
 
-        # Kandidaten bestimmen
         kandidaten = self.berechneKandidaten()
-        alle_verbindungen = set( map(frozenset,self.zugverbindungen) )
+        alle_verbindungen = set( map(frozenset,self.zugverbindungen) )      # erzeuge Menge aller Verbindungen zur spaeteren Anwendung der Mengenoperationen
 
-        abdeckung_nach_kandidat = {}
-
-        for k in kandidaten:
-            # Berechne Menge der Verbindungen die durch k abgedeckt werden
-            k_abgedeckte_verbindungen = set()
-            for verbindung in self.zugverbindungen:
-                if k in verbindung:
-                    k_abgedeckte_verbindungen.add( frozenset(verbindung) )
-
-            if not k in abdeckung_nach_kandidat:
-                abdeckung_nach_kandidat[k] = k_abgedeckte_verbindungen
+        abdeckung_nach_kandidat = {
+                                    k : set( frozenset(verbindung) 
+                                             for verbindung in self.zugverbindungen 
+                                             if k in verbindung )
+                                    for k in kandidaten}
 
         servicestationen = self.minimaleAbdeckung(alle_verbindungen, abdeckung_nach_kandidat)
         
@@ -143,6 +143,7 @@ class MinimalRechner:
                     knoten_erscheinung[k] += 1
 
         kandidaten = []
+
         while len(red_zugverbindungen) > 1:
             hoechstes_aufkommen = max( knoten_erscheinung, key=knoten_erscheinung.get )
             kandidaten.append(hoechstes_aufkommen)

@@ -1,6 +1,7 @@
 from abc import ABCMeta, abstractmethod
-from .Knoten import Knoten
-from .Kante import Kante
+
+from Knoten import Knoten
+from Kante import Kante
 
 class Reduktionstechnik(metaclass = ABCMeta):
     """

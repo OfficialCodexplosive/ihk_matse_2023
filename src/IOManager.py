@@ -1,5 +1,6 @@
 from pathlib import Path
-from .Knoten import Knoten
+
+from Knoten import Knoten
 
 class IOManager:
     """
@@ -45,14 +46,25 @@ class IOManager:
         """
         self.fname = Path(pfad).stem
         zugverbindungen = []
-        with open(pfad, 'r') as file:
-            for line in file:
-                if line.startswith('#'):
-                    continue
-                verbindung_str = line.strip(';').strip().split(';')
-                verbindungsknoten = self.verbindungZuKnoten(verbindung_str)
-                zugverbindungen.append(verbindungsknoten)
-        return zugverbindungen
+        try:
+            with open(pfad, 'r') as file:
+                file.seek(0)
+                lines = file.readlines()
+                if not lines:
+                    raise ValueError(f"Die Eingabedatei {self.fname}.in ist leer.")
+                for line in lines:
+                    if line.startswith('#'): 
+                        continue
+                    verbindung_str = line.strip(';').strip().split(';')         # Zeilenumbrueche am Ende der Zeile werden entfernt
+                    verbindungsknoten = self.verbindungZuKnoten(verbindung_str)
+                    zugverbindungen.append(verbindungsknoten)
+            return zugverbindungen
+        except ValueError as e:
+            raise ValueError(f'[Fehler] {str(e)}')
+        except FileNotFoundError as e:
+            raise FileNotFoundError(f'{str(e)}\n[Fehler] Die Eingabedatei {self.fname}.in konnte nicht gefunden werden:')
+        except Exception as e:
+            raise Exception('[Fehler] Ein unerwarteter Fehler ist aufgetreten:', str(e))
     
     def verbindungZuKnoten(self, verbindung : list[str]) -> list[Knoten]:
         """
@@ -94,10 +106,11 @@ class IOManager:
         """
         ausgabeText = f'Servicestationen in: {self.knotenlisteZuText(menge)}'
 
-        pfad = Path(__file__).parent.parent.resolve()
-        pfad = pfad.joinpath(f'files/out/{self.fname}.out' if ausgabeOrdner is None else f'{ausgabeOrdner}/{self.fname}.out')
-
-        with open(pfad, 'w') as file:
+        pfad = Path(__file__).parent.resolve()
+        pfad = pfad.joinpath(f'files/out/{self.fname}.out' 
+                             if ausgabeOrdner is None 
+                             else f'{ausgabeOrdner}/{self.fname}.out')
+        with open(pfad, 'w', newline="") as file:
             file.write(ausgabeText)
 
     def knotenlisteZuText(self, menge : list[Knoten]) -> str:
