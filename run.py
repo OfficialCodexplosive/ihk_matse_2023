@@ -5,11 +5,11 @@ from src import MinimalRechner as mr
 
 cwd = Path(__file__).parent.resolve()
 in_folder = cwd.joinpath("files/in")
-in_file = in_folder.joinpath("ihk.in")
+#in_file = in_folder.joinpath("ihk.in")
 #in_file = in_folder.joinpath("redDuplikate.in")
 #in_file = in_folder.joinpath("redBahnhoefe.in")
 #in_file = in_folder.joinpath("redZugverbindungen.in")
-#in_file = in_folder.joinpath("non_minimal.in")
+in_file = in_folder.joinpath("non_minimal.in")
 
 mr = mr.MinimalRechner( in_file )
 
