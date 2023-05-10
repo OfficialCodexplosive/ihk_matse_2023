@@ -3,7 +3,7 @@ import pytest
 from src import Reduktionstechnik as rt
 from src import MinimalRechner as mr
 
-def test_datenreduktion1():
+def test_datenreduktion1_beispiel():
     moegliche_loesungen = [ ["HH", "H", "K"] ]
     loesungsmenge = list(map(set, moegliche_loesungen))
 
@@ -19,7 +19,7 @@ def test_datenreduktion1():
     except Exception as e:
         raise pytest.fail(f"Test fehlgeschlagen: {str(e)}") 
     
-def test_datenreduktion2():
+def test_datenreduktion2_beispiel():
     moegliche_loesungen = [ ["S","H","K"], 
                            ["FFM","H","K"],
                            ["M","H","B"],
@@ -39,7 +39,7 @@ def test_datenreduktion2():
     except Exception as e:
         raise pytest.fail(f"Test fehlgeschlagen: {str(e)}") 
     
-def test_datenreduktion3():
+def test_datenreduktion3_beispiel():
     moegliche_loesungen = [ ["DA","H"], 
                            ["M","N","DA","B"],
                            ["C","M","E"] ]

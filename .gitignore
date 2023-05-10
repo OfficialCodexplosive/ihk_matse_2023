@@ -4,3 +4,9 @@ venv
 src/*/*.pyc
 files/*/gen_datensatz_*.in
 files/*/gen_datensatz_*.out
+docs/build
+docs/source
+docs/make.bat
+docs/Makefile
+assets
+__pycache__
