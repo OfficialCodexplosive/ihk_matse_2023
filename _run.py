@@ -4,8 +4,10 @@ from pathlib import Path
 
 from src import MinimalRechner as mr
 
-#eingabe_pfad = "tests/in/ihk_beispiel.in"         # gib einen relativen Pfad zur Eingabedatei an
-#ausgabe_ordner = "tests/out/"                     # gib einen relativen Pfad zum Ausgabeordner an
+eingabe_pfad = None
+
+eingabe_pfad = "files/in/ihk_beispiel.in"         # gib einen relativen Pfad zur Eingabedatei an
+ausgabe_ordner = "files/out/"                     # gib einen relativen Pfad zum Ausgabeordner an
 
 parser = ArgumentParser()
 def parse_arguments():
@@ -28,7 +30,7 @@ def parse_arguments():
                         required=False)
     
     args = parser.parse_args()
-    if (args.test == False and args.input == None and args.batch == None):
+    if eingabe_pfad == None and (args.test == False and args.input == None and args.batch == None):
         parser.error("Keine Eingabedatei angegeben!")
 
 

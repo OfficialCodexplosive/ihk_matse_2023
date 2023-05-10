@@ -8,5 +8,4 @@ docs/build
 docs/source
 docs/make.bat
 docs/Makefile
-assets
 __pycache__

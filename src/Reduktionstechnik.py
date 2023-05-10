@@ -74,7 +74,7 @@ class ReduziereBahnhoefe(Reduktionstechnik):
         :return: reduzierte Liste von Zugverbindungen
         :rtype: list[list[Knoten]]
         """
-        kanten : list[Knoten] = []
+        kanten : list[Kante] = []
         zu_entfernen : list[Knoten] = []
         k_appearance : dict[str, int] = {}
         for k_list in k_lists:
