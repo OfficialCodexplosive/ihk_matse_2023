@@ -1,0 +1,36 @@
+# Beispiel 1
+HH;H;B;L
+K;FFM;S
+HH;H;FFM;N;M
+H;FFM;N
+DA;FFM;N
+HH;FFM;M
+
+# Beispiel 1 - DR 1
+HH;H;B;L
+K;FFM;S
+HH;H;FFM;N;M
+H;FFM;N
+DA;FFM;N
+HH;FFM;M
+
+# Beispiel 1 - DR 2
+HH;H;B;L
+K;FFM;S
+HH;H;FFM;N;M
+H;FFM;N
+DA;FFM;N
+HH;FFM;M
+
+# Beispiel 1 - Nach Datenreduktion
+HH;H;B;L
+K;FFM;S
+H;FFM;N
+DA;FFM;N
+HH;FFM;M
+
+# Kandidaten
+HH;FFM
+
+# Minimalloesung
+Servicestationen in: HH;FFM

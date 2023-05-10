@@ -17,7 +17,8 @@ class Knoten:
     *   Setzen des Vorgaengers/ Nachfolgers (**setzeVorgaenger**, **setzeNachfolger**)
     *   Abrufen des Vorgaengers/ Nachfolgers (**gibVorgaenger**, **gibNachfolger**)
     """
-    def __init__(self, name : str) -> None:
+    def __init__(self, 
+                 name : str) -> None:
         """
         Konstruktor zur Erzeugung einer Knoten-Klasseninstanz.
 
@@ -49,7 +50,8 @@ class Knoten:
         """
         return self.name
 
-    def __eq__(self, other : Knoten) -> bool:
+    def __eq__(self, 
+               other : Knoten) -> bool:
         """
         Operatorueberladung, die es ermoeglicht, zwei Knoten anhand ihres Namens zu vergleichen.
 
@@ -74,7 +76,8 @@ class Knoten:
         """
         return hash(self.name)
 
-    def setzeVorgaenger(self, k : Knoten) -> None:
+    def setzeVorgaenger(self, 
+                        k : Knoten) -> None:
         """
         Funktion zur Festlegung des Vorgaengers des Knotens.
 
@@ -97,7 +100,8 @@ class Knoten:
         """
         return self.vorgaenger
 
-    def setzeNachfolger(self, k : Knoten) -> None:
+    def setzeNachfolger(self, 
+                        k : Knoten) -> None:
         """
         Funktion zur Festlegung des Nachfolgers des Knotens.
 

@@ -4,8 +4,8 @@ from pathlib import Path
 
 from src import MinimalRechner as mr
 
-eingabe_pfad = "../tests/in/ihk.in"         # gib einen relativen Pfad zur Eingabedatei an
-ausgabe_ordner = "../tests/out/"            # gib einen relativen Pfad zum Ausgabeordner an
+#eingabe_pfad = "tests/in/ihk_beispiel.in"         # gib einen relativen Pfad zur Eingabedatei an
+#ausgabe_ordner = "tests/out/"                     # gib einen relativen Pfad zum Ausgabeordner an
 
 parser = ArgumentParser()
 def parse_arguments():
@@ -22,10 +22,15 @@ def parse_arguments():
                         help="Fuehre alle Tests im Ordner tests/ aus.",
                         required=False,
                         action="store_true")
+    parser.add_argument("-b",
+                        "--batch",
+                        help="Erzeuge Ausgaben zu allen Dateien im angegebenen Ordner. Der Ordner wird relativ zu dieser Datei (_run.py) aufgerufen.",
+                        required=False)
     
     args = parser.parse_args()
-    if args.test == False and args.input == None:
+    if (args.test == False and args.input == None and args.batch == None):
         parser.error("Keine Eingabedatei angegeben!")
+
 
     return args
 
@@ -48,9 +53,23 @@ if args["out"] != None:
 if args["test"] == True:
     fuehre_tests_aus()
 else:
-    if eingabe_pfad == None:
-        raise ValueError("Keine Eingabedatei angegeben!")
+    if args["batch"] != None:
+        import os
+        eingabe_pfad = args["batch"]
+        
+        root_path = Path(__file__).parent.resolve()
+        pfad = root_path.joinpath(eingabe_pfad)
+        for file in os.listdir(pfad):
+            if os.path.isfile(os.path.join(pfad,file)):
+                m = mr.MinimalRechner(pfad=f"../{eingabe_pfad}/{file}")
+                m.berechneMinimalloesung(ausgabeOrdner=f"../{eingabe_pfad}/out/")
+    else:
+        if eingabe_pfad == None:
+            raise ValueError("Keine Eingabedatei angegeben!")
+        m = mr.MinimalRechner(pfad=f"../{eingabe_pfad}")
+        m.berechneMinimalloesung(ausgabeOrdner=f"../{ausgabe_ordner}")
 
-    m = mr.MinimalRechner(pfad=eingabe_pfad)
-    m.berechneMinimalloesung(ausgabeOrdner=ausgabe_ordner)
+
+
+    
 

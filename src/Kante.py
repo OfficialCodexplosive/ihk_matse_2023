@@ -19,7 +19,9 @@ class Kante:
     *   Rueckgabe der Knoten, die diese Kante miteinander verbindet (**gibKnoten**)
     *   Aktualisieren und Abrufen der Häufigkeit der Verbindung (**erhoeheGewicht**, **setzeGewicht**, **gibGewicht**)
     """
-    def __init__(self, k1 : Knoten, k2 : Knoten) -> None:
+    def __init__(self, 
+                 k1 : Knoten, 
+                 k2 : Knoten) -> None:
         """
         Konstruktor zur Erzeugung einer Kante-Klasseninstanz.
 
@@ -40,7 +42,8 @@ class Kante:
         self.k2 = k2
         self.gewicht = 0
 
-    def __eq__(self, k : Kante) -> bool:
+    def __eq__(self, 
+               k : Kante) -> bool:
         """
         Operatorueberladung, die es ermoeglicht, zwei Kanten anhand der Punkte, die sie verbinden, zu vergleichen.
 
@@ -82,7 +85,8 @@ class Kante:
         """
         self.gewicht += 1
 
-    def setzeGewicht(self, gewicht : int) -> None:
+    def setzeGewicht(self, 
+                     gewicht : int) -> None:
         """
         Funktion zur Setzung des Gewichts der Kante auf einen beliebigen Wert.
 

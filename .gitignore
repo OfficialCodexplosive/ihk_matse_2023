@@ -1,4 +1,6 @@
 venv
 ./*/__pycache__
 .pytest_cache
-*.pyc
+src/*/*.pyc
+files/*/gen_datensatz_*.in
+files/*/gen_datensatz_*.out

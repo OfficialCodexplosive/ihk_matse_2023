@@ -71,7 +71,7 @@ def test_effizienz_busse_berlin():
     ausgabe_datei = "in/gen_datensatz_163bv_20hs_81kn.in"
 
     erstelle_testdaten(n_busverbindungen, max_haltestellen, knotennamen, ausgabe_datei)
-"""
+
 
 def test_erstelle_testdaten():
     n_verbindungen = [1, 10, 100, 100, 1000]
@@ -84,13 +84,14 @@ def test_erstelle_testdaten():
         for n_hs in n_haltestellen:
             for n_kn in n_knotennamen:
                 knotennamen = [chr(i) for i in range(ord('A'), ord('A')+1+n_kn)]
-                ausgabe_datei = f"in/gen_datensatz_{n_v}v_{n_hs}hs_{n_kn}kn.in"
+                ausgabe_datei = f"in/gen_datensatz_{n_v}v_{n_hs}hs_{n_kn}kn_KEINEREDUKTION.in"
                 ausgabedateien.append(ausgabe_datei)
 
                 erstelle_testdaten(n_v, n_hs, knotennamen, ausgabe_datei)
 
     print(ausgabedateien)
     from timeit import default_timer as timer
+    from src import Reduktionstechnik as rt
     ausgabedateien = set(ausgabedateien)
     
     datei_zeit = {}
@@ -101,7 +102,7 @@ def test_erstelle_testdaten():
         try:
             st = timer()
             m = mr.MinimalRechner(pfad=f"{eingabe_pfad}/{ad}")
-            n_knoten, knoten = m.berechneMinimalloesung(ausgabeOrdner=ausgabe_ordner)
+            n_knoten, knoten = m.berechneMinimalloesung(ausgabeOrdner=ausgabe_ordner, reduktionstechniken=[rt.ReduziereDuplikate])
             et = timer()
 
             elapsed_time = et - st
@@ -112,8 +113,10 @@ def test_erstelle_testdaten():
     import json
     from pathlib import Path
     pfad = Path(__file__).parent.resolve()
-    pfad = pfad.joinpath("testdaten_zeit.json")
+    pfad = pfad.joinpath("testdaten_zeit_KEINEREDUKTION.json")
 
     with open(pfad, "w",encoding="utf-8") as f:
-        json.dump(datei_zeit, f, indent=4, sort_keys=True)
+        json.dump(datei_zeit, f, indent=4)
 
+
+"""

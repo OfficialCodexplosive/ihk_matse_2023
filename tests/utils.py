@@ -6,8 +6,8 @@ def validiere(dateiname : str,
               moegliche_loesungen : list[list[str]], 
               n_loesungsknoten : int,
               red_techniken : list[rt.Reduktionstechnik] = [rt.ReduziereDuplikate, rt.ReduziereBahnhoefe, rt.ReduziereZugverbindungen],
-              eingabe_pfad : str = "../tests/in/",
-              ausgabe_ordner : str = "../tests/out/"):
+              eingabe_pfad : str = "../files/in/",
+              ausgabe_ordner : str = "../files/out/"):
     
     loesungsmenge = list(map(set, moegliche_loesungen))
 
@@ -30,7 +30,7 @@ def gen_knotenname(knotennamen):
 def erstelle_testdaten(n_zugverbindungen : int,
                        max_bahnhoefe : int,
                        knotennamen : list[str],
-                       ausgabe_datei : str = "tests/testdaten.in"):
+                       ausgabe_datei : str = "files/testdaten.in"):
     import random, sys
     from pathlib import Path
 

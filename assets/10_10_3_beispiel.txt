@@ -1,0 +1,23 @@
+# Ausgangsbeispiel
+# 10ZV, 2-10HS, 3KN
+A;B;C;A;C
+C;A;A
+A;A;C
+A;C;A;A;C;C;B;B;B
+A;A;C;B;C;A;C;C;C;C
+A;B;B;B
+B;B
+C;A;A;A;C;A;B;C;C
+B;B;B;B;C;A;B;B
+A;C;C;B;A;A;C;C;B
+
+# Ausgangsbeispiel nach 3. Datenreduktion
+C;A
+A;C
+B
+
+# Kandidaten
+C;A;B
+
+# Minimalloesung
+Servicestationen in: B,C

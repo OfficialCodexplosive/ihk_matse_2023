@@ -32,7 +32,8 @@ class MinimalRechner:
     *   Bestimmen der minimalen Anzahl an sowie Positionen der Servicestationen durch Anwenden des Algorithmus (**berechneMinimalloesung**)
     *   Validieren des im Algorithmus errechneten Ergebnisses (**validiereMinimalloesung**)
     """
-    def __init__(self, pfad : str) -> None:
+    def __init__(self, 
+                 pfad : str) -> None:
         """
         Konstruktor zur Erzeugung einer MinimalRechner-Klasseninstanz.
 
@@ -67,7 +68,7 @@ class MinimalRechner:
 
         ...die minimale Anzahl an Zugverbindungen bestimmt wird, die das gesamte Eisenbahnnetz abdeckt.
 
-        ...die endgültige Lösung anhand ihrer Mächtigkeit auf Plausabilität getestet wird.
+        ...die endgültige Lösung anhand ihrer Mächtigkeit auf Plausibilität getestet wird.
 
         Bei Übergabe einer Liste von Zugverbindungen wird diese als Grundlage für die Berechnung der minimalen Lösung verwendet.
         Durch Angabe eines Ausgabeordners wird die Minimallösung an einen benutzerdefinierten Speicherort geschrieben.
@@ -135,7 +136,7 @@ class MinimalRechner:
 
         kandidaten = []
 
-        while len(red_zugverbindungen) > 1:
+        while len(red_zugverbindungen) > 0:
             hoechstes_aufkommen = max( knoten_erscheinung, key=knoten_erscheinung.get )
             kandidaten.append(hoechstes_aufkommen)
 
@@ -145,10 +146,6 @@ class MinimalRechner:
                     zugverbindungen_neu.append(v)
             red_zugverbindungen = zugverbindungen_neu
             knoten_erscheinung.pop(hoechstes_aufkommen, None)
-
-        if len(red_zugverbindungen) == 1:
-            hoechstes_aufkommen = zugverbindungen_neu[0][0]
-            kandidaten.append(hoechstes_aufkommen)
 
         return kandidaten
     
@@ -166,7 +163,9 @@ class MinimalRechner:
 
         return red_zugverbindungen
     
-    def minimaleAbdeckung(self, alleVerbindungen : set[frozenset[Knoten]], zuKombinierendeVerbindungen : dict[Knoten, set[frozenset[Knoten]]]) -> list[Knoten]:
+    def minimaleAbdeckung(self, 
+                          alleVerbindungen : set[frozenset[Knoten]], 
+                          zuKombinierendeVerbindungen : dict[Knoten, set[frozenset[Knoten]]]) -> list[Knoten]:
         """
         Hilfsfunktion zur Bestimmung der minimal benötigten Kandidaten, um das Eisenbahnnetz vollständig abzudecken.
 
@@ -192,7 +191,8 @@ class MinimalRechner:
                     return k
         return None
 
-    def erzeugeKombinationen(self, kandidaten : list[Knoten]) -> list[list[Knoten]]:
+    def erzeugeKombinationen(self, 
+                             kandidaten : list[Knoten]) -> list[list[Knoten]]:
         """
         Hilfsfunktion zur Erzeugung aller Kombinationen einer Liste von Kandidaten.
 
@@ -211,7 +211,8 @@ class MinimalRechner:
             kombos += [k, k + [kandidaten[0]]]
         return kombos
 
-    def validiereErgebnis(self, ergebnis : list[Knoten]) -> bool:
+    def validiereErgebnis(self, 
+                          ergebnis : list[Knoten]) -> bool:
         """
         Hilfsfunktion zur Validierung des Ergebnisses durch Ausschluss unmöglicher Mächtigkeiten.
 
@@ -224,7 +225,7 @@ class MinimalRechner:
         :rtype: bool
         """
         if ergebnis == None:
-            return True
+            raise ValueError("Es konnte keine Lösung bestimmt werden.")
         loesung_maechtigkeit = len(ergebnis)
         max_maechtigkeit = len(self.zugverbindungen)
         min_maechtigkeit = 1
