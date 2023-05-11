@@ -45,7 +45,7 @@ class Kante:
     def __eq__(self, 
                k : Kante) -> bool:
         """
-        Operatorueberladung, die es ermoeglicht, zwei Kanten anhand der Punkte, die sie verbinden, zu vergleichen.
+        Operatorueberladung, die es ermoeglicht, zwei Kanten anhand der Knoten, die sie verbinden, zu vergleichen.
 
         **Erforderliche Parameter:**
 
@@ -60,7 +60,7 @@ class Kante:
     def __hash__(self) -> int:
         """
         Operatorueberladung, die es ermoeglicht, die Kante zu hashen und vergleichbar zu machen. 
-        Kanten, die dieselben Punkte verbinden, sollen dieselbe Kante sein und intern denselben Hash-Wert besitzen.
+        Kanten, die dieselben Knoten verbinden, sollen dieselbe Kante sein und intern denselben Hash-Wert besitzen.
         
         :return: Hash-Wert der Kante
         :rtype: int

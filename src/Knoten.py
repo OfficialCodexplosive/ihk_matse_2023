@@ -8,7 +8,7 @@ class Knoten:
 
     Die Parameter, die in einer Instanz dieser Klasse gespeichert werden, beziehen sich auf den Namen (**name**) des Bahnhofes sowie auf den vorangehenden (**vorgaenger**) und nachfolgenden (**nachfolger**) Knoten.
 
-    Instanzen dieser Klasse beiten folgende Funktionalitaet an:
+    Instanzen dieser Klasse bieten folgende Funktionalitaet an:
     *   Initialisieren aller Parameter zum Erstellen der Klasseninstanz (**__init__**)
     *   Ausgabe des Knotens in menschen-leserlicher Form bei expliziter Konvertierung in einen String (**__str__**)
     *   Ausgabe des Knotens in menschen-leserlicher Form bei normaler Ausgabe (**__repr__**)

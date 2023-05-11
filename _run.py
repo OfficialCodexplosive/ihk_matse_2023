@@ -6,8 +6,8 @@ from src import MinimalRechner as mr
 
 eingabe_pfad = None
 
-eingabe_pfad = "files/in/ihk_beispiel.in"         # gib einen relativen Pfad zur Eingabedatei an
-ausgabe_ordner = "files/out/"                     # gib einen relativen Pfad zum Ausgabeordner an
+#eingabe_pfad = "files/in/ihk_beispiel.in"         # gib einen relativen Pfad zur Eingabedatei an
+#ausgabe_ordner = "files/out/"                     # gib einen relativen Pfad zum Ausgabeordner an
 
 parser = ArgumentParser()
 def parse_arguments():

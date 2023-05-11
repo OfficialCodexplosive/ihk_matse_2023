@@ -158,7 +158,7 @@ class MinimalRechner:
         :rtype: list[list[Knoten]]
         """
         red_zugverbindungen = deepcopy(self.zugverbindungen)    # sicherstellen, dass Originaldaten nicht veraendert werden
-        for methode in reduktionstechniken: 
+        for methode in reduktionstechniken:
             red_zugverbindungen = methode.reduziere( red_zugverbindungen )
 
         return red_zugverbindungen

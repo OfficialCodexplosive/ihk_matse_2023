@@ -59,11 +59,12 @@ class IOManager:
                     if line.startswith('#'): 
                         continue
                     verbindung_str = line.strip(';').strip().split(';')         # Zeilenumbrueche am Ende der Zeile werden entfernt
-                    
                     if any([elem.isnumeric() for elem in verbindung_str]):
                         raise SyntaxError(f"Die Eingabedatei {self.fname}.in enthaelt Zahlen.")
                     if not all([re.match(erlaubte_zeichen, elem) for elem in verbindung_str]):
-                        raise SyntaxError(f"Die Eingabedatei {self.fname}.in enthaelt unerlaubte Zeichen.")
+                        raise SyntaxError(f"Die Eingabedatei {self.fname}.in enthaelt verbotene Zeichen.")
+                    if len(verbindung_str) < 2:
+                        raise ValueError(f"Die Eingabedatei {self.fname}.in enthaelt zu wenig Bahnhofsnamen.")
                     
                     verbindungsknoten = self.verbindungZuKnoten(verbindung_str)
                     zugverbindungen.append(verbindungsknoten)
@@ -123,7 +124,7 @@ class IOManager:
         ausgabeText = f'Servicestationen in: {self.knotenlisteZuText(menge)}'
 
         pfad = Path(__file__).parent.resolve()
-        pfad = pfad.joinpath(f'../tests/out/{self.fname}.out' 
+        pfad = pfad.joinpath(f'../files/out/{self.fname}.out' 
                              if ausgabeOrdner is None 
                              else f'{ausgabeOrdner}/{self.fname}.out')
         try:
