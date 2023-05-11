@@ -1,4 +1,4 @@
-import pytest
+
 from src import MinimalRechner as mr
 from src import Reduktionstechnik as rt
 
@@ -19,6 +19,7 @@ def validiere(dateiname : str,
         assert n_knoten == n_loesungsknoten
         assert knoten_menge in loesungsmenge
     except Exception as e:
+        import pytest
         raise pytest.fail(f"Test fehlgeschlagen: {str(e)}") 
     
 def gen_knotenname(knotennamen):
@@ -36,12 +37,10 @@ def erstelle_testdaten(n_zugverbindungen : int,
 
     result = []
     for i in range(n_zugverbindungen):
-        n_bahnhoefe = random.randint(2, max_bahnhoefe)
-        
-        verbindung_str = [gen_knotenname(knotennamen) for j in range(n_bahnhoefe)]
+        verbindung_str = [gen_knotenname(knotennamen) for j in range(max_bahnhoefe)]
         result.append(';'.join(verbindung_str))
 
-    pfad = Path(__file__).parent.resolve()
+    pfad = Path(__file__).parent.parent.resolve()
     pfad = pfad.joinpath(ausgabe_datei)
 
     with open(pfad, "w", newline="", encoding="utf-8") as f:

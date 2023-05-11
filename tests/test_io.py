@@ -45,7 +45,7 @@ def test_leseDatei_fehler_unerlaubte_zeichen():
         with open(pfad, "w", newline="") as f:
             f.write(input_data)
 
-        with pytest.raises(SyntaxError, match="unerlaubte Zeichen"):
+        with pytest.raises(SyntaxError, match="verbotene Zeichen"):
             io_manager.leseDatei(pfad)
 
 def test_leseDatei_fehler_leere_datei():

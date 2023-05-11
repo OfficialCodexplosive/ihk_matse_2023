@@ -47,6 +47,7 @@ class MinimalRechner:
         """
         self.manager = IOManager()
         pfad = root_path.joinpath(pfad)
+        print(pfad)
         try:
             self.zugverbindungen = self.manager.leseDatei(pfad)
         except Exception as e:
@@ -126,17 +127,16 @@ class MinimalRechner:
         red_zugverbindungen = self.reduziereZugverbindungen(reduktionstechniken)
         self.zugverbindungen = red_zugverbindungen
 
-        knoten_erscheinung = {}
-        for v in red_zugverbindungen:
-            for k in v:
-                if k not in knoten_erscheinung:
-                    knoten_erscheinung[k] = 1
-                else:
-                    knoten_erscheinung[k] += 1
-
         kandidaten = []
-
         while len(red_zugverbindungen) > 0:
+            knoten_erscheinung = {}
+            for v in red_zugverbindungen:
+                for k in v:
+                    if k not in knoten_erscheinung:
+                        knoten_erscheinung[k] = 1
+                    else:
+                        knoten_erscheinung[k] += 1
+
             hoechstes_aufkommen = max( knoten_erscheinung, key=knoten_erscheinung.get )
             kandidaten.append(hoechstes_aufkommen)
 
@@ -145,7 +145,6 @@ class MinimalRechner:
                 if not hoechstes_aufkommen in v:
                     zugverbindungen_neu.append(v)
             red_zugverbindungen = zugverbindungen_neu
-            knoten_erscheinung.pop(hoechstes_aufkommen, None)
 
         return kandidaten
     

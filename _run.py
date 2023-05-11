@@ -5,6 +5,7 @@ from pathlib import Path
 from src import MinimalRechner as mr
 
 eingabe_pfad = None
+ausgabe_ordner = None
 
 #eingabe_pfad = "files/in/ihk_beispiel.in"         # gib einen relativen Pfad zur Eingabedatei an
 #ausgabe_ordner = "files/out/"                     # gib einen relativen Pfad zum Ausgabeordner an
@@ -69,7 +70,8 @@ else:
         if eingabe_pfad == None:
             raise ValueError("Keine Eingabedatei angegeben!")
         m = mr.MinimalRechner(pfad=f"../{eingabe_pfad}")
-        m.berechneMinimalloesung(ausgabeOrdner=f"../{ausgabe_ordner}")
+        out_path = f"../{ausgabe_ordner}" if ausgabe_ordner else None
+        m.berechneMinimalloesung(ausgabeOrdner=out_path)
 
 
 
