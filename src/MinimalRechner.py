@@ -47,7 +47,6 @@ class MinimalRechner:
         """
         self.manager = IOManager()
         pfad = root_path.joinpath(pfad)
-        print(pfad)
         try:
             self.zugverbindungen = self.manager.leseDatei(pfad)
         except Exception as e:

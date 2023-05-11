@@ -3,9 +3,9 @@ from src import MinimalRechner as mr
 import json
 
 def erstelle_testdaten():
-    n_verbindungen = [1] + [10*i for i in range(1,11)]
-    n_haltestellen = [2] + [10*i for i in range(1,11)]
-    n_knotennamen = [2, 5, 10, 15, 20, 25]
+    n_verbindungen = [1] + [10, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+    n_haltestellen = [2] + [10, 20, 30, 40, 50, 100]
+    n_knotennamen = [2, 5, 10, 15, 20, 25, 30, 31, 33] 
 
 
     ausgabedateien = []
@@ -13,7 +13,25 @@ def erstelle_testdaten():
     for n_v in n_verbindungen:
         for n_hs in n_haltestellen:
             for n_kn in n_knotennamen:
-                knotennamen = [chr(i) for i in range(ord('A'), ord('A')+1+n_kn)]
+                
+                if n_kn == 30:
+                    knotennamen = ["A", "B", "C", "D", "E", "F", "G", "H", "I", 
+                                   "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S","T","U","V","W","X","Y","Z",
+                                   "AA", "AB", "AC", "AD", "AE"]
+                    
+                elif n_kn == 31:
+                    knotennamen = ["A", "B", "C", "D", "E", "F", "G", "H", "I", 
+                                   "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S","T","U","V","W","X","Y","Z",
+                                   "AA", "AB", "AC", "AD", "AE",
+                                   "BA"]
+                elif n_kn == 33:
+                    knotennamen = ["A", "B", "C", "D", "E", "F", "G", "H", "I", 
+                                   "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S","T","U","V","W","X","Y","Z",
+                                   "AA", "AB", "AC", "AD", "AE",
+                                   "BA", "BB", "BC"]
+                else:
+                    knotennamen = [chr(i) for i in range(ord('A'), ord('A')+n_kn)]
+
                 ausgabe_datei = f"laufzeitanalyse/in/gen_datensatz_{n_v}v_{n_hs}hs_{n_kn}kn.in"
                 ausgabedateien.append(ausgabe_datei)
 
@@ -26,7 +44,7 @@ def erstelle_testdaten():
     eingabe_pfad : str = "../"
     ausgabe_ordner : str = "../laufzeitanalyse/out/"
     for ad in ausgabedateien:
-        print("Teste", ad)
+        print("Teste", ad, "...")
         try:
             st = timer()
             m = mr.MinimalRechner(pfad=f"{eingabe_pfad}/{ad}")
@@ -40,7 +58,7 @@ def erstelle_testdaten():
     import json
     from pathlib import Path
     pfad = Path(__file__).parent.resolve()
-    pfad = pfad.joinpath("testdaten_zeit_KEINEREDUKTION.json")
+    pfad = pfad.joinpath("laufzeitanalyse/testdaten_zeit.json")
 
     with open(pfad, "w",encoding="utf-8") as f:
         json.dump(datei_zeit, f, indent=4)
